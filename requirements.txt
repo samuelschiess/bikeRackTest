@@ -1,0 +1,6 @@
+requests
+python-dotenv
+pandas
+Pillow
+transformers
+# We install torch manually to ensure it uses the CUDA 12.1 endpoints.
