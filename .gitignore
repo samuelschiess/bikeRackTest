@@ -1,0 +1,24 @@
+# Environments
+venv/
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Model Weights
+*.pt
+*.pth
+*.onnx
+
+# Outputs and Analytics
+output_images/
+*.csv
+*.log
+
+# IDEs & System
+.vscode/
+.idea/
+.DS_Store
