@@ -2,24 +2,20 @@ import os
 import argparse
 from PIL import ImageDraw
 from mapillary_client import MapillaryClient
-from detector import GroundingDinoDetector, YoloWorldDetector
+from detector import YoloWorldDetector
 from storage import BikeRackDataStore
 
 def run_pipeline(bbox: str) -> None:
     print("Initialize Mapillary Client...")
     mly_client = MapillaryClient()
     
-    # We will test both!
     print("Initialize Detectors...")
-    dino_detector = GroundingDinoDetector(threshold=0.15)
     # YOLO-World scores tend to be lower out of the box, setting threshold to 0.05
-    yolo_detector = YoloWorldDetector(threshold=0.05) 
+    yolo_detector = YoloWorldDetector(threshold=0.05)
     
     store = BikeRackDataStore()
 
     # Create directories for output images
-    os.makedirs("output_images/dino/detected", exist_ok=True)
-    os.makedirs("output_images/dino/not_detected", exist_ok=True)
     os.makedirs("output_images/yolo/detected", exist_ok=True)
     os.makedirs("output_images/yolo/not_detected", exist_ok=True)
 
@@ -46,28 +42,6 @@ def run_pipeline(bbox: str) -> None:
             print(f"Error downloading image: {e}")
             continue
             
-        # ---------------------------------------------
-        # RUN GROUNDING DINO
-        # ---------------------------------------------
-        try:
-            img_dino = img.copy()
-            dino_preds = dino_detector.detect(img_dino)
-            
-            if dino_preds:
-                draw = ImageDraw.Draw(img_dino)
-                for d in dino_preds:
-                    box = d["box"]
-                    draw.rectangle([(box["xmin"], box["ymin"]), (box["xmax"], box["ymax"])], outline="blue", width=5)
-                    
-                    filename = f"output_images/dino/detected/{image_id}.jpg"
-                    store.add_record(image_id, "GroundingDINO", lat, lon, captured_at, d["score"], box, os.path.abspath(filename))
-                
-                img_dino.save(f"output_images/dino/detected/{image_id}.jpg")
-            else:
-                img_dino.save(f"output_images/dino/not_detected/{image_id}.jpg")
-        except Exception as e:
-            print(f"Error in GroundingDINO: {e}")
-
         # ---------------------------------------------
         # RUN YOLO-WORLD
         # ---------------------------------------------
