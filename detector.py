@@ -8,8 +8,12 @@ class YoloWorldDetector:
         Initializes the YOLO-World zero-shot model.
         It is exceptionally fast and optimized for edge detection.
         """
-        print(f"[YOLO-World] Loading {model_id}...")
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        print(f"[YOLO-World] Loading {model_id} on {self.device.upper()}...")
+        
         self.model = YOLOWorld(model_id)
+        self.model.to(self.device)
+        
         # YOLO-World lets us set arbitrary classes!
         self.model.set_classes(["bike rack", "bicycle rack", "bicycle parking"])
         self.threshold = threshold
