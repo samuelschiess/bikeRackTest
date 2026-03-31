@@ -4,6 +4,9 @@ venv/
 
 # Python
 __pycache__/
+format_dataset.py
+harvest_images.py
+train.py
 *.pyc
 *.pyo
 *.pyd
@@ -17,6 +20,14 @@ __pycache__/
 output_images/
 *.csv
 *.log
+*.zip
+
+# Machine Learning & Datasets
+dataset_raw/
+exported_dataset/
+custom_dataset/
+runs/
+
 
 # IDEs & System
 .vscode/
